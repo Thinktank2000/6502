@@ -8,8 +8,10 @@
             Registers registers = new Registers();
             Memory memory = new Memory();
 
+            //initialise CPU
             cpu.Initialize(registers, memory);
 
+            //test to see if init worked
             Console.WriteLine("{0:X}", registers.PC);
         }
     }
