@@ -4,6 +4,9 @@
     {
         public void Initialize(Registers registers, Memory Memory)
         {
+            //memory initialisation
+            Array.Clear(Memory.memory);
+
             //register initialisation
             registers.A = 0;
             registers.X = 0;
@@ -21,9 +24,6 @@
             registers.I = false;
             registers.Z = false;
             registers.C = false;
-
-            //memory initialisation
-            Array.Clear(Memory.memory);
         }
     }
 }
