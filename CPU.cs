@@ -2,8 +2,6 @@
 {
     public class CPU
     {
-        //Internal CPU clock
-        public static UInt32 clock;
         public void Initialize(Registers registers, Memory Memory)
         {
             //memory initialisation
@@ -31,16 +29,16 @@
         public void ResetCPU(Memory memory, Registers registers)
         {
             //CPU clock is reset to 0
-            clock = 0;
+            registers.Clock = 0;
 
             //PC is advanced 2 bytes from FFFA and reset vector (FFFC) is set to 0 (start of Zeropage RAM)
             memory.memory[0xFFFC] = 0x0000;
-            clock += 2;
-            registers.PC += (UInt16)clock;
+            registers.PC += 2;
             registers.PC = memory.memory[0xFFFC];
+            registers.Clock += 2;
 
             //clock is advanced 5 cycles (length of rest of CPU reset sequence)
-            clock += 5;
+            registers.Clock += 5;
         }
     }
 }
