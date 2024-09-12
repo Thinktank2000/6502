@@ -9,7 +9,7 @@
 
         //special registers
         public UInt16 PC;  //Program Counter
-        public byte SP;    //Stack Pointer
+        public UInt16 SP;  //Stack Pointer
 
         //processor status flags
         public bool N;     //negative flag
