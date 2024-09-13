@@ -4,7 +4,7 @@
     {
         public static void Main(string[] args)
         {
-            //instances
+            //object instances
             CPU cpu = new CPU();
             Registers registers = new Registers();
             Memory memory = new Memory();
@@ -16,26 +16,23 @@
             //reset cpu
             cpu.ResetCPU(memory, registers);
 
-            //first opcodes laid down
+            //first opcodes laid down:
+            //increment X register
             instructions.ExecuteOpCode(0xE8, memory, registers);
+            Debug.ReadRegister(registers, "X");
+            Debug.ReadRegister(registers, "PC");
 
-            registers.A = 0xFF;
+            //load A with 0xA9 and push to stack before reading stack
+            registers.A = 0xA9;
             instructions.ExecuteOpCode(0x48, memory, registers);
-
+            Debug.ReadMemory(memory, registers, Debug.CurrentStackAddr(registers));
+            Debug.ReadRegister(registers, "PC");
             registers.A = 0x00;
+
             instructions.ExecuteOpCode(0x68, memory, registers);
-
-            instructions.ReadMemory(memory, registers, 0x0100);
-            ReadAllRegisters(registers, instructions);
-        }
-
-        static void ReadAllRegisters(Registers registers, Instructions instructions)
-        {
-            instructions.ReadRegister(registers, "A");
-            instructions.ReadRegister(registers, "X");
-            instructions.ReadRegister(registers, "Y");
-            instructions.ReadRegister(registers, "PC");
-            instructions.ReadRegister(registers, "SP");
+            Debug.ReadRegister(registers, "A");
+            Console.WriteLine("The current stack location is: 0x{0:X}", Debug.CurrentStackAddr(registers));
+            Debug.ReadRegister(registers, "PC");
         }
     }
 }

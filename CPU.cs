@@ -32,8 +32,8 @@
             registers.Clock = 0;
 
             //PC is advanced 2 bytes from FFFA and reset vector (FFFC) is set to 0 (start of Zeropage RAM)
-            memory.memory[0xFFFC] = 0x0000;
             registers.PC += 2;
+            memory.memory[0xFFFC] = 0x0200;
             registers.PC = memory.memory[0xFFFC];
             registers.Clock += 2;
 
