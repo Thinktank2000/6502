@@ -57,6 +57,12 @@
             }
         }
 
+        public void NOP(Registers registers)
+        {
+            registers.PC++;
+            registers.Clock += 2;
+        }
+
         public void ExecuteOpCode(byte opcode, Memory memory, Registers registers)
         {
             switch (opcode)
@@ -71,6 +77,10 @@
 
                 case 0x68:
                     PLA(memory, registers);
+                    break;
+
+                case 0xEA:
+                    NOP(registers);
                     break;
             }
         }

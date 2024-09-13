@@ -31,6 +31,10 @@
                     Console.WriteLine("The location of the Stack Pointer is 0x{0:X}", registers.SP);
                     break;
 
+                case "Clock":
+                    Console.WriteLine("The current clock cycle is {0}/1MHz", registers.Clock);
+                    break;
+
                 default:
                     Console.WriteLine("Register not recognized");
                     break;
