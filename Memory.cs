@@ -10,5 +10,26 @@
         //0x0100 - 0x01FF = Stack memory, Stack pointer starts at 0x0100
         //0x0200 - 0xFFF9 = General purpose RAM
         //0xFFFA - 0xFFFF = Reset ROM
+        
+        public void ReadBytesIntoMemory(string filename)
+        {
+            int memoryOffset = 0x0200;
+            byte[] buffer = new byte[0xFDF9];
+
+            try
+            {
+                FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                buffer = File.ReadAllBytes(filename);
+                fs.Close();
+                buffer.CopyTo(memory, memoryOffset);
+            }
+
+            catch (SystemException)
+            {
+                Console.WriteLine("Your file is too big");
+                Console.ReadLine();
+                Environment.Exit(1);
+            }  
+        }
     }
 }
