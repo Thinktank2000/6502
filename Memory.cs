@@ -27,7 +27,6 @@
             catch (SystemException)
             {
                 Console.WriteLine("Your file is too big");
-                Console.ReadLine();
                 Environment.Exit(1);
             }  
         }

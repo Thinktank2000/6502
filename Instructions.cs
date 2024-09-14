@@ -85,7 +85,22 @@
                 case 0xEA:
                     NOP(registers);
                     break;
+
+                //implement interrupts later (BRK)
+                case 0x00:
+                    registers.PC++;
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid Opcode detected");
+                    Environment.Exit(0);
+                    break;
             }
+        }
+
+        public void ExecuteProgram(byte opcode, Memory memory, Registers registers)
+        {
+            ExecuteOpCode(opcode, memory, registers);
         }
     }
 }
