@@ -44,7 +44,6 @@
                 }
             }
 
-            Debug.ReadRegister(registers, "X");
             Console.WriteLine("End of Program");
         }
     }

@@ -107,6 +107,11 @@
         }
         */
 
+        public void LDAImm(Memory memory, Registers registers)
+        {
+            registers.A = memory.ReadMemoryValue(registers.PC += 1, registers);
+        }
+
         //basic function to recognize processor opcodes and execute the relevant instruction
         public void ExecuteOpCode(byte opcode, Memory memory, Registers registers)
         {
@@ -138,11 +143,17 @@
                     //BEQ(registers, memory);
                     break;
 
+                //exit program opcode (no associated instruction)
                 case 0xFF:
+                    break;
+
+                case 0xA9:
+                    LDAImm(memory, registers);
                     break;
 
                 default:
                     registers.PC++;
+                    registers.clock++;
                     break;
             }
         }

@@ -31,6 +31,13 @@ namespace _6502
 
             offset = finalOffsetAddr;
         }
+
+        public byte ReadMemoryValue(UInt16 address, Registers registers)
+        {
+            byte value = (byte)memory[address];
+            registers.clock++;
+            return value;
+        }
         
         public void ReadBytesIntoMemory(string filename, Registers registers, Memory memory)
         {
@@ -58,12 +65,11 @@ namespace _6502
                 fs.Close();
                 buffer.CopyTo(memory.memory, offset);
                 registers.PC = offset;
-                Debug.ReadMemory(memory, registers, 0x0202);
             }
 
-            catch (SystemException ex)
+            catch (SystemException)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("File too big");
                 Environment.Exit(1);
             }  
         }
