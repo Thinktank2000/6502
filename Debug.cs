@@ -46,18 +46,21 @@
             return registers.SP;
         }
 
-        public static void HexDump(Memory memory)
+        public static void DisplayAllRegisters(Registers registers)
         {
-            var numberOfRows = 500;
-            var numberOfCols = 16;
-            for (var currentRow = 0; currentRow < numberOfRows; currentRow++)
-            {
-                for (var currentCol = 0; currentCol < numberOfCols; currentCol++)
-                {
-                    Console.Write("{0:X2}, {1:X2}", currentRow, currentCol);
-                }
-                Console.WriteLine();
-            }
+            ReadRegister(registers, "A");
+            ReadRegister(registers, "X");
+            ReadRegister(registers, "Y");
+            ReadRegister(registers, "PC");
+            ReadRegister(registers, "SP");
+            ReadRegister(registers, "Clock");
+        }
+
+        public static void DumpRegisters(Registers registers)
+        {
+            registers.A = 0;
+            registers.X = 0;
+            registers.Y = 0;
         }
     }
 }

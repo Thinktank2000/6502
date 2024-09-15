@@ -65,47 +65,13 @@
             registers.clock += 2;
         }
 
-        //branch if equals to zero (127 bytes either way)
-        /*
-        public void BEQ(Registers registers, Memory memory)
+        public void TAX(Memory memory, Registers registers)
         {
-            if (registers.Z == true)
-            {
-                byte hiByte = (byte)(memory.memory[registers.PC + 0x02]);
-                byte loByte = (byte)(memory.memory[registers.PC + 0x01]);
-
-                string hiByteString = hiByte.ToString("X2");
-                string loByteString = loByte.ToString("X2");
-
-                string finalAddrString = (hiByteString + loByteString);
-
-                Console.WriteLine(finalAddrString);
-
-                UInt16 finalAddr = UInt16.Parse(finalAddrString, System.Globalization.NumberStyles.HexNumber);
-
-                Console.WriteLine(finalAddr);
-
-                if (finalAddr - registers.PC <= 0x7F)
-                {
-                    registers.PC = finalAddr;
-                    Console.WriteLine(registers.PC);
-                    registers.clock += 2;
-                }
-
-                else
-                {
-                    Console.WriteLine("Out of Range");
-                    Environment.Exit(1);
-                }
-            }
-
-            else
-            {
-                registers.PC += 2;
-                registers.clock += 2;
-            }
+            registers.X = registers.A;
+            registers.A = 0;
+            registers.PC++;
+            registers.clock += 2;
         }
-        */
 
         public void LDAImm(Memory memory, Registers registers)
         {
@@ -117,6 +83,10 @@
         {
             switch (opcode)
             {
+                case 0xAA:
+                    TAX(memory, registers);
+                    break;
+
                 case 0xE8:
                     INX(registers);
                     break;

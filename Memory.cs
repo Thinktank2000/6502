@@ -67,7 +67,7 @@ namespace _6502
                 registers.PC = offset;
             }
 
-            catch (SystemException)
+            catch (IndexOutOfRangeException)
             {
                 Console.WriteLine("File too big");
                 Environment.Exit(1);

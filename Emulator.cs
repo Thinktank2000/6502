@@ -30,6 +30,10 @@
             //loop through memory for opcodes and execute them
             for (int i = memory.offset; i < 0xFFF9; i++)
             {
+                Debug.DisplayAllRegisters(registers);
+                Thread.Sleep(1000);
+                Console.Clear();
+
                 byte currentOpCode = (byte)memory.memory[registers.PC];
                 instructions.ExecuteProgram(currentOpCode, memory, registers);
 
@@ -44,6 +48,7 @@
                 }
             }
 
+            Debug.DisplayAllRegisters(registers);
             Console.WriteLine("End of Program");
         }
     }
