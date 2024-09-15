@@ -21,6 +21,6 @@
         public bool C { get; set; } //Carry flag
 
         //CPU clock
-        public int Clock { get; set; } //CPU clock (1MHz)
+        public int clock { get; set; } //CPU clock (1MHz)
     }
 }

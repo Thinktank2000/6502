@@ -29,16 +29,16 @@
         public void ResetCPU(Memory memory, Registers registers)
         {
             //CPU clock is reset to 0
-            registers.Clock = 0;
+            registers.clock = 0;
 
-            //PC is advanced 2 bytes from FFFA and reset vector (FFFC) is set to 0 (start of Zeropage RAM)
+            //PC is advanced 2 bytes from FFFA and reset vector (FFFC) is set to 0x0200 (start of general purpose RAM)
             registers.PC += 2;
-            memory.memory[0xFFFC] = 0x0200;
+            memory.memory[0xFFFC] = memory.memory[memory.offset];
             registers.PC = memory.memory[0xFFFC];
-            registers.Clock += 2;
+            registers.clock += 2;
 
             //clock is advanced 5 cycles (length of rest of CPU reset sequence)
-            registers.Clock += 5;
+            registers.clock += 5;
         }
     }
 }

@@ -32,7 +32,7 @@
                     break;
 
                 case "Clock":
-                    Console.WriteLine("The current clock cycle is {0}/1MHz", registers.Clock);
+                    Console.WriteLine("The current clock cycle is {0}/1MHz", registers.clock);
                     break;
 
                 default:
@@ -44,6 +44,20 @@
         public static UInt16 CurrentStackAddr(Registers registers)
         {
             return registers.SP;
+        }
+
+        public static void HexDump(Memory memory)
+        {
+            var numberOfRows = 500;
+            var numberOfCols = 16;
+            for (var currentRow = 0; currentRow < numberOfRows; currentRow++)
+            {
+                for (var currentCol = 0; currentCol < numberOfCols; currentCol++)
+                {
+                    Console.Write("{0:X2}, {1:X2}", currentRow, currentCol);
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
