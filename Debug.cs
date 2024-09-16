@@ -2,7 +2,7 @@
 {
     public static class Debug
     {
-        public static void ReadMemory(Memory memory, Registers registers, int memoryAddress)
+        public static void ReadMemory(Memory memory, Registers registers, UInt16 memoryAddress)
         {
             Console.WriteLine("Value at Memory address: 0x{0:X} = 0x{1:X4}", memoryAddress, memory.memory[memoryAddress]);
         }

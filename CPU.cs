@@ -16,6 +16,8 @@
             registers.PC = 0xFFFA;
             registers.SP = 0x0100;
 
+            registers.clock = 0x00;
+
             //status flags initialisation
             registers.N = false;
             registers.V = false;
@@ -30,6 +32,8 @@
         {
             //CPU clock is reset to 0
             registers.clock = 0;
+
+            Array.Clear (memory.memory);
 
             //PC is advanced 2 bytes from FFFA and reset vector (FFFC) is set to 0x0200 (start of general purpose RAM)
             registers.PC += 2;

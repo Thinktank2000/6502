@@ -2,6 +2,12 @@
 {
     public class Instructions
     { 
+        public void INCzp(Memory memory, Registers registers, AddressingModes addressingModes)
+        {
+            memory.ChangeMemoryByOne(addressingModes, false, registers, memory);
+            registers.clock += 5;
+        }
+
         //method for INX instruction
         public void INX(Registers registers)
         {
@@ -15,6 +21,23 @@
             }
 
             else if (registers.X == 0)
+            {
+                registers.Z = true;
+            }
+        }
+
+        public void INY(Registers registers)
+        {
+            registers.Y++;
+            registers.PC++;
+            registers.clock += 2;
+
+            if (registers.Y < 0)
+            {
+                registers.N = true;
+            }
+
+            else if (registers.Y == 0)
             {
                 registers.Z = true;
             }
@@ -71,6 +94,16 @@
             registers.A = 0;
             registers.PC++;
             registers.clock += 2;
+
+            if (registers.X < 0)
+            {
+                registers.N = true;   
+            }
+
+            if (registers.X == 0)
+            {
+                registers.Z = true;
+            }
         }
 
         public void LDAImm(Memory memory, Registers registers)
@@ -79,12 +112,20 @@
         }
 
         //basic function to recognize processor opcodes and execute the relevant instruction
-        public void ExecuteOpCode(byte opcode, Memory memory, Registers registers)
+        public void ExecuteOpCode(byte opcode, AddressingModes addressingModes, Memory memory, Registers registers)
         {
             switch (opcode)
             {
                 case 0xAA:
                     TAX(memory, registers);
+                    break;
+
+                case 0xE6:
+                    INCzp(memory, registers, addressingModes);
+                    break;
+
+                case 0xC8:
+                    INY(registers); 
                     break;
 
                 case 0xE8:
@@ -128,9 +169,9 @@
             }
         }
 
-        public void ExecuteProgram(byte opcode, Memory memory, Registers registers)
+        public void ExecuteProgram(byte opcode, AddressingModes addressingModes, Memory memory, Registers registers)
         {
-            ExecuteOpCode(opcode, memory, registers);
+            ExecuteOpCode(opcode, addressingModes, memory, registers);
         }
     }
 }

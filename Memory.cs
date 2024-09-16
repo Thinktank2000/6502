@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace _6502
 {
@@ -8,6 +9,7 @@ namespace _6502
         public UInt16[] memory = new UInt16[1024 * 64];
 
         public UInt16 offset { get; set; }
+        public UInt16 memoryLocation { get; set; }
 
         //Memory map:
         //0x0000 - 0x00FF = Zeropage RAM 
@@ -15,7 +17,7 @@ namespace _6502
         //0x0200 - 0xFFF9 = General purpose RAM
         //0xFFFA - 0xFFFF = Reset ROM
 
-        public void GetMemoryOffset(string filename)
+        public UInt16 GetMemoryOffset(string filename)
         {
             FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
 
@@ -29,19 +31,66 @@ namespace _6502
 
             UInt16 finalOffsetAddr = UInt16.Parse(finalOffsetString, System.Globalization.NumberStyles.HexNumber);
 
-            offset = finalOffsetAddr;
+            return finalOffsetAddr;
         }
 
         public byte ReadMemoryValue(UInt16 address, Registers registers)
         {
-            byte value = (byte)memory[address];
+            var value = memory[address];
             registers.clock++;
-            return value;
+            return (byte)value;
+        }
+
+        public UInt16 GetAddressByAddressingMode(AddressingModes addressingMode, Registers registers)
+        {
+            UInt16 address;
+
+            switch (addressingMode)
+            {
+                case (AddressingModes.Absolute):
+                    {
+                        return ((UInt16)(ReadMemoryValue(registers.PC++, registers) | (ReadMemoryValue(registers.PC++, registers) << 8)));
+                    }
+
+                case (AddressingModes.ZeroPage):
+                    address = ReadMemoryValue(registers.PC += 1, registers);
+                    return address;
+
+                default:
+                    Console.WriteLine("No address found");
+                    return 0;
+            }
+        }
+
+        public void ChangeMemoryByOne(AddressingModes addressingModes, bool Decrement, Registers registers, Memory memory)
+        {
+            memoryLocation = GetAddressByAddressingMode(AddressingModes.ZeroPage, registers);
+            byte memoryValue = ReadMemoryValue(memoryLocation, registers);
+
+            WriteMemoryValue(memoryLocation, memoryValue, registers);
+
+            if (Decrement)
+            {
+                memoryValue -= 1;
+            }
+
+            else if (!Decrement)
+            {
+                memoryValue += 1;
+            }
+
+            WriteMemoryValue(memoryLocation, memoryValue, registers);
+        }
+
+        public void WriteMemoryValue(UInt16 address, byte data, Registers registers)
+        {
+            registers.clock++;
+            memory[address] = data;
         }
         
         public void ReadBytesIntoMemory(string filename, Registers registers, Memory memory)
         {
-            GetMemoryOffset(filename);
+            offset = GetMemoryOffset(filename);
 
             List<UInt16> buffer = new List<UInt16>();
 
@@ -54,20 +103,14 @@ namespace _6502
                 for (int i = 0; i < 0xFFFA - offset; i++)
                 {
                     buffer.Add((UInt16)fs.ReadByte());
-
-                    if (buffer[i] == 0xFF)
-                    {
-                        Console.WriteLine("0xFF byte found");
-                        break;
-                    }
                 }
 
                 fs.Close();
-                buffer.CopyTo(memory.memory, offset);
                 registers.PC = offset;
+                buffer.CopyTo(memory.memory, offset);
             }
 
-            catch (IndexOutOfRangeException)
+            catch (ArgumentOutOfRangeException)
             {
                 Console.WriteLine("File too big");
                 Environment.Exit(1);
