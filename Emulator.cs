@@ -40,6 +40,7 @@
                 instructions.ExecuteProgram(currentOpCode, addressingModes ,memory, registers);
 
                 Console.WriteLine("The current Opcode is: {0:X2}", currentOpCode);
+                Console.WriteLine("The current Instruction is: {0}", Opcodes.OpcodeConverter(currentOpCode));
                 Debug.ReadMemory(memory, registers, memory.memoryLocation);
 
                 if (registers.clock >= 1000000)
