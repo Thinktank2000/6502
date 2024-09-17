@@ -1,4 +1,7 @@
-﻿namespace _6502
+﻿using Microsoft.Win32;
+using System;
+
+namespace _6502
 {
     public class Instructions
     {
@@ -88,6 +91,16 @@
             registers.PC++;
             CPU.IncrementCycleCount(registers, 2);   
         }
+        #endregion
+
+        #region jump and branch instructions
+
+        public void JMPabs(Memory memory, Registers registers)
+        {
+            registers.PC = memory.GetAddressByAddressingMode(AddressingModes.Absolute, registers);
+            CPU.IncrementCycleCount(registers, 3);
+        }
+
         #endregion
 
         #region data load and store instructions
@@ -184,12 +197,9 @@
                     CPU.IncrementCycleCount(registers, 7);
                     break;
 
-                case 0xF0:
-                    //BEQ(registers, memory);
-                    break;
-
-                //exit program opcode (no associated instruction)
-                case 0xFF:
+                case 0x4C:
+                    JMPabs(memory, registers);
+                    registers.PC += 2;
                     break;
 
                 case 0xA9:
@@ -225,6 +235,10 @@
                 case 0x84:
                     STYzp(memory, registers, addressingModes);
                     registers.PC++;
+                    break;
+
+                //exit program opcode (no associated instruction)
+                case 0xFF:
                     break;
 
                 default:

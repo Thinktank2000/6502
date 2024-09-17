@@ -1,11 +1,13 @@
-﻿namespace _6502
+﻿using System;
+
+namespace _6502
 {
     public class CPU
     {
-        public void Initialize(Registers registers, Memory Memory)
+        public void Initialize(Registers registers, Memory memory)
         {
-            //memory initialisation
-            Array.Clear(Memory.memory);
+
+            ClearMemory(memory);
 
             //register initialisation
             registers.A = 0;
@@ -33,8 +35,6 @@
             //CPU clock is reset to 0
             registers.clock = 0;
 
-            Array.Clear (memory.memory);
-
             //PC is advanced 2 bytes from FFFA and reset vector (FFFC) is set to 0x0200 (start of general purpose RAM)
             registers.PC += 2;
             memory.memory[0xFFFC] = memory.memory[memory.offset];
@@ -50,5 +50,15 @@
             registers.clock += cycles;
             return registers.clock;
         }
+
+        private static void ClearMemory(Memory memory)
+        {
+            //memory initialisation
+            for (int i = 0; i < 0xFFFF; i++)
+            {
+                memory.memory[i] = 0x00;
+            }
+        }
+
     }
 }

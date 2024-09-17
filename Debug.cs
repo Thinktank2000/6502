@@ -67,7 +67,7 @@ namespace _6502
 
         public static void DumpMemoryToBin(Memory memory)
         {
-            FileStream fs = new FileStream("memdump.bin", FileMode.Create);
+            FileStream fs = new FileStream("memdump.bin", FileMode.Create, FileAccess.Write);
             BinaryWriter bw = new BinaryWriter(fs);
 
             for (int i = 0; i < memory.memory.Length; i++)

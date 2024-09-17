@@ -247,6 +247,11 @@
                 case 0xC8:
                     return "INY";
 
+                //jump and branch instructions
+                case 0x4C:
+                case 0x6C:
+                    return "JMP";
+
                 //No operation
                 case 0xEA:
                     return "NOP";
