@@ -4,7 +4,7 @@
     {
         public static void ReadMemory(Memory memory, Registers registers, UInt16 memoryAddress)
         {
-            Console.WriteLine("Value at Memory address: 0x{0:X} = 0x{1:X4}", memoryAddress, memory.memory[memoryAddress]);
+            Console.WriteLine("Value at Memory address: 0x{0:X4} = 0x{1:X2}", memoryAddress, memory.memory[memoryAddress]);
         }
 
         public static void ReadRegister(Registers registers, string register)

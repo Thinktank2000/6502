@@ -247,9 +247,12 @@
                 case 0xC8:
                     return "INY";
 
+                //No operation
+                case 0xEA:
+                    return "NOP";
+
                 default:
-                    Console.WriteLine("No compatible instruction found, may be a memory address");
-                    return " ";
+                    return "N/A";
             }
         }
     }

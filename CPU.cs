@@ -44,5 +44,11 @@
             //clock is advanced 5 cycles (length of rest of CPU reset sequence)
             registers.clock += 5;
         }
+
+        public static int IncrementCycleCount(Registers registers, int cycles)
+        {
+            registers.clock += cycles;
+            return registers.clock;
+        }
     }
 }

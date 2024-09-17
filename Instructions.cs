@@ -1,19 +1,19 @@
 ﻿namespace _6502
 {
     public class Instructions
-    { 
+    {
+        #region increment and decrement instructions
         public void INCzp(Memory memory, Registers registers, AddressingModes addressingModes)
         {
             memory.ChangeMemoryByOne(addressingModes, false, registers, memory);
-            registers.clock += 5;
+            CPU.IncrementCycleCount(registers, 5);
         }
 
-        //method for INX instruction
         public void INX(Registers registers)
         {
             registers.X++;
             registers.PC++;
-            registers.clock += 2;
+            CPU.IncrementCycleCount(registers, 2);
 
             if (registers.X < 0)
             {
@@ -30,7 +30,7 @@
         {
             registers.Y++;
             registers.PC++;
-            registers.clock += 2;
+            CPU.IncrementCycleCount(registers, 2);
 
             if (registers.Y < 0)
             {
@@ -42,14 +42,15 @@
                 registers.Z = true;
             }
         }
+        #endregion
 
-        //method for PHA instruction (push A to stack)
+        #region stack instructions
         public void PHA(Memory memory, Registers registers)
         {
             registers.SP++;
             memory.memory[registers.SP] = registers.A;
             registers.PC++;
-            registers.clock += 3;
+            CPU.IncrementCycleCount(registers, 3);
 
             if (registers.SP > 0)
             {
@@ -62,13 +63,12 @@
             }
         }
 
-        //method for PLA instruction (Pull A from stack)
         public void PLA(Memory memory, Registers registers)
         {
             registers.A = (byte)memory.memory[registers.SP];
             registers.SP--;
             registers.PC++;
-            registers.clock += 4;
+            CPU.IncrementCycleCount(registers, 4);
 
             if (registers.SP > 0)
             {
@@ -80,12 +80,50 @@
                 registers.Z = true;
             }
         }
+        #endregion
 
-        //method for NOP instruction (No Operation)
+        #region No operation
         public void NOP(Registers registers)
         {
             registers.PC++;
-            registers.clock += 2;
+            CPU.IncrementCycleCount(registers, 2);   
+        }
+        #endregion
+
+        #region data load and store instructions
+        public void LDAImm(Memory memory, Registers registers)
+        {
+            registers.A = memory.ReadMemoryValue(registers.PC += 1, registers);
+        }
+
+        public void LDAzp(Memory memory, Registers registers, AddressingModes addressingModes)
+        {
+            registers.A = memory.ReadMemoryValue(memory.GetAddressByAddressingMode(AddressingModes.ZeroPage, registers), registers);
+        }
+
+        public void LDXImm(Memory memory, Registers registers)
+        {
+            registers.X = memory.ReadMemoryValue(registers.PC += 1, registers);
+        }
+
+        public void LDYImm(Memory memory, Registers registers)
+        {
+            registers.Y = memory.ReadMemoryValue(registers.PC += 1, registers);
+        }
+
+        public void STAzp(Memory memory, Registers registers, AddressingModes addressingModes)
+        {
+            memory.WriteMemoryValue(memory.GetAddressByAddressingMode(AddressingModes.ZeroPage, registers), registers.A, registers);
+        }
+
+        public void STXzp(Memory memory, Registers registers, AddressingModes addressingModes)
+        {
+            memory.WriteMemoryValue(memory.GetAddressByAddressingMode(AddressingModes.ZeroPage, registers), registers.X, registers);
+        }
+
+        public void STYzp(Memory memory, Registers registers, AddressingModes addressingModes)
+        {
+            memory.WriteMemoryValue(memory.GetAddressByAddressingMode(AddressingModes.ZeroPage, registers), registers.Y, registers);
         }
 
         public void TAX(Memory memory, Registers registers)
@@ -93,11 +131,11 @@
             registers.X = registers.A;
             registers.A = 0;
             registers.PC++;
-            registers.clock += 2;
+            CPU.IncrementCycleCount(registers, 2);
 
             if (registers.X < 0)
             {
-                registers.N = true;   
+                registers.N = true;
             }
 
             if (registers.X == 0)
@@ -105,11 +143,7 @@
                 registers.Z = true;
             }
         }
-
-        public void LDAImm(Memory memory, Registers registers)
-        {
-            registers.A = memory.ReadMemoryValue(registers.PC += 1, registers);
-        }
+        #endregion
 
         //basic function to recognize processor opcodes and execute the relevant instruction
         public void ExecuteOpCode(byte opcode, AddressingModes addressingModes, Memory memory, Registers registers)
@@ -147,7 +181,7 @@
                 //implement interrupts later (BRK)
                 case 0x00:
                     registers.PC++;
-                    registers.clock += 7;
+                    CPU.IncrementCycleCount(registers, 7);
                     break;
 
                 case 0xF0:
@@ -160,11 +194,42 @@
 
                 case 0xA9:
                     LDAImm(memory, registers);
+                    registers.PC++;
+                    break;
+
+                case 0xA5:
+                    LDAzp(memory, registers, addressingModes);
+                    registers.PC++;
+                    break;
+
+                case 0xA2:
+                    LDXImm(memory, registers);
+                    registers.PC++;
+                    break;
+
+                case 0xA0:
+                    LDYImm(memory, registers);
+                    registers.PC++;
+                    break;
+
+                case 0x85:
+                    STAzp(memory, registers, addressingModes);
+                    registers.PC++;
+                    break;
+
+                case 0x86:
+                    STXzp(memory, registers, addressingModes);
+                    registers.PC++;
+                    break;
+
+                case 0x84:
+                    STYzp(memory, registers, addressingModes);
+                    registers.PC++;
                     break;
 
                 default:
                     registers.PC++;
-                    registers.clock++;
+                    CPU.IncrementCycleCount(registers, 1);    
                     break;
             }
         }
