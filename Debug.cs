@@ -1,4 +1,6 @@
-﻿namespace _6502
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace _6502
 {
     public static class Debug
     {
@@ -61,6 +63,21 @@
             registers.A = 0;
             registers.X = 0;
             registers.Y = 0;
+        }
+
+        public static void DumpMemoryToBin(Memory memory)
+        {
+            FileStream fs = new FileStream("memdump.bin", FileMode.Create);
+            BinaryWriter bw = new BinaryWriter(fs);
+
+            for (int i = 0; i < memory.memory.Length; i++)
+            {
+                byte data = (byte)memory.memory[i];
+                bw.Write(data);
+            }
+
+            bw.Close();
+            fs.Close();
         }
     }
 }

@@ -54,6 +54,15 @@
             }
 
             Debug.DisplayAllRegisters(registers);
+
+            Console.Write("Would you like to dump memory? (Y/N): ");
+            string selection = Console.ReadLine();
+
+            if (selection.ToUpper() == "Y")
+            {
+                Debug.DumpMemoryToBin(memory); 
+            }
+
             Console.WriteLine("End of Program");
             Console.WriteLine("Exit code 0");
         }
