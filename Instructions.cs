@@ -129,6 +129,16 @@ namespace _6502
             memory.WriteMemoryValue(memory.GetAddressByAddressingMode(AddressingModes.ZeroPage, registers), registers.A, registers);
         }
 
+        public void STAzpx(Memory memory, Registers registers, AddressingModes addressingModes)
+        {
+            memory.WriteMemoryValue(memory.GetAddressByAddressingMode(AddressingModes.ZeroPageX, registers), registers.A, registers);
+        }
+
+        public void STAabs(Memory memory, Registers registers, AddressingModes addressingModes)
+        {
+            memory.WriteMemoryValue(memory.GetAddressByAddressingMode(AddressingModes.Absolute, registers), registers.A, registers);
+        }
+
         public void STXzp(Memory memory, Registers registers, AddressingModes addressingModes)
         {
             memory.WriteMemoryValue(memory.GetAddressByAddressingMode(AddressingModes.ZeroPage, registers), registers.X, registers);
@@ -225,6 +235,16 @@ namespace _6502
                 case 0x85:
                     STAzp(memory, registers, addressingModes);
                     registers.PC++;
+                    break;
+
+                case 0x95:
+                    STAzpx(memory, registers, addressingModes);
+                    registers.PC++;
+                    break;
+
+                case 0x8D:
+                    STAabs(memory, registers, addressingModes);
+                    registers.PC += 2;
                     break;
 
                 case 0x86:

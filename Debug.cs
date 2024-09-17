@@ -58,13 +58,6 @@ namespace _6502
             ReadRegister(registers, "Clock");
         }
 
-        public static void DumpRegisters(Registers registers)
-        {
-            registers.A = 0;
-            registers.X = 0;
-            registers.Y = 0;
-        }
-
         public static void DumpMemoryToBin(Memory memory)
         {
             FileStream fs = new FileStream("memdump.bin", FileMode.Create, FileAccess.Write);

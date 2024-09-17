@@ -43,17 +43,39 @@ namespace _6502
 
         public UInt16 GetAddressByAddressingMode(AddressingModes addressingMode, Registers registers)
         {
-            byte address;
+            UInt16 address;
 
             switch (addressingMode)
             {
                 case (AddressingModes.Absolute):
-                    {
-                        return (UInt16)(ReadMemoryValue(registers.PC += 1, registers) | (ReadMemoryValue(registers.PC += 1, registers) << 8));
-                    }
+                    return (UInt16)(ReadMemoryValue(registers.PC += 1, registers) | (ReadMemoryValue(registers.PC += 1, registers) << 8));
+
 
                 case (AddressingModes.ZeroPage):
                     address = ReadMemoryValue(registers.PC += 1, registers);
+                    return address;
+
+                case (AddressingModes.ZeroPageX):
+                    address = ReadMemoryValue(registers.PC += 1, registers);
+                    ReadMemoryValue(address, registers);
+
+                    address += registers.X;
+                    address &= 0xFF;
+
+                    if (address > 0xFF)
+                    {
+                        address -= 0x0100;
+                    }
+
+                    return address;
+
+                case (AddressingModes.ZeroPageY):
+                    address = ReadMemoryValue(registers.PC++, registers);
+                    ReadMemoryValue(address, registers);
+
+                    address += registers.Y;
+                    address &= 0xFF;
+
                     return address;
 
                 default:
